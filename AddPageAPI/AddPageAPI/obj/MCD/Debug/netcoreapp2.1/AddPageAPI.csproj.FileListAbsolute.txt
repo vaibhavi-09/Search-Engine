@@ -1,0 +1,14 @@
+C:\Users\Akshat\Desktop\React\AddPageAPI\bin\MCD\Debug\netcoreapp2.1\AddPageAPI.dll
+C:\Users\Akshat\Desktop\React\AddPageAPI\obj\MCD\Debug\netcoreapp2.1\AddPageAPI.csprojAssemblyReference.cache
+C:\Users\Akshat\Desktop\React\AddPageAPI\obj\MCD\Debug\netcoreapp2.1\AddPageAPI.csproj.CoreCompileInputs.cache
+C:\Users\Akshat\Desktop\React\AddPageAPI\obj\MCD\Debug\netcoreapp2.1\AddPageAPI.RazorAssemblyInfo.cache
+C:\Users\Akshat\Desktop\React\AddPageAPI\obj\MCD\Debug\netcoreapp2.1\AddPageAPI.RazorAssemblyInfo.cs
+C:\Users\Akshat\Desktop\React\AddPageAPI\obj\MCD\Debug\netcoreapp2.1\AddPageAPI.AssemblyInfoInputs.cache
+C:\Users\Akshat\Desktop\React\AddPageAPI\obj\MCD\Debug\netcoreapp2.1\AddPageAPI.AssemblyInfo.cs
+C:\Users\Akshat\Desktop\React\AddPageAPI\bin\MCD\Debug\netcoreapp2.1\AddPageAPI.deps.json
+C:\Users\Akshat\Desktop\React\AddPageAPI\bin\MCD\Debug\netcoreapp2.1\AddPageAPI.runtimeconfig.json
+C:\Users\Akshat\Desktop\React\AddPageAPI\bin\MCD\Debug\netcoreapp2.1\AddPageAPI.runtimeconfig.dev.json
+C:\Users\Akshat\Desktop\React\AddPageAPI\obj\MCD\Debug\netcoreapp2.1\AddPageAPI.RazorTargetAssemblyInfo.cache
+C:\Users\Akshat\Desktop\React\AddPageAPI\obj\MCD\Debug\netcoreapp2.1\AddPageAPI.dll
+C:\Users\Akshat\Desktop\React\AddPageAPI\obj\MCD\Debug\netcoreapp2.1\AddPageAPI.pdb
+C:\Users\Akshat\Desktop\React\AddPageAPI\bin\MCD\Debug\netcoreapp2.1\AddPageAPI.pdb
