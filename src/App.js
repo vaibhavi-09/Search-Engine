@@ -22,26 +22,23 @@ class MyForm extends React.Component {
   <div>
   <Header as='h1'>Add Page</Header>
   <Form onSubmit={this.handleSubmit}>
-    <Form.Field>
-      <label>Title</label>
-      <input type="text" name="title" placeholder='Title'/>
-    </Form.Field>
-    <div class="ui right labeled left icon input">
-    <i class="tags icon"></i>
-    <input type="text" name="tags" placeholder="Enter tags" />
-    <a class="ui tag label">
-    Add Tag
-    </a>
-    </div>
-    <div class="ui form">
+  <div class="ui form">
+  <div class="field">
+    <label>Title</label>
+    <input type="text" name="Title" placeholder="Enter Title"/>
+  </div>
+  <div class="field">
+    <label>Tags</label>
+    <input type="text" name="Tags" placeholder="Enter Tags"/>
+  </div>
     <div class="field">
     <label>Description</label>
    <textarea></textarea>
     </div>
-    </div>
     <div>
-    <button class="ui green button">Submit</button>
+    <button type="submit" class="ui green button">Submit</button>
     <button class="ui blue button">Like</button>
+    </div>
     </div>
   </Form>
   </div>
