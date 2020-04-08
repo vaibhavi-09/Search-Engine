@@ -24,8 +24,8 @@ namespace AddPageAPI.Controllers
             var title=Page.Title;
             var tags=Page.Tags;
             var description=Page.Description;
-            var like=Page.Like;
-           Log.Information("Title:"+title+"Tags:"+tags+"Description:"+description+"Likes:"+like);
+            
+           Log.Information("Title:"+title+"Tags:"+tags+"Description:"+description);
          
         }
     }
