@@ -1,45 +1,54 @@
-import React from 'react'
-import { Form,Header } from 'semantic-ui-react'
+import React from 'react';
+import axios from 'axios';
+import { Form,Header } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
 class MyForm extends React.Component {
-  constructor() {
-    super();
-    this.handleSubmit = this.handleSubmit.bind(this);
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: '',
+      tags: '',
+      description: '',
+    };
+    
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
-    const data = new FormData(event.target);
-    
-    fetch('http://localhost:5000/api/AddPage', {
-      method: 'POST',
-      body: data,
-    });
+  onChange = (e) => {
+  
+    this.setState({ [e.target.name]: e.target.value });
   }
+  onSubmit =  (e) => {
+    e.preventDefault();
+    // get our form data out of state
+    const { title, tags, description } = this.state;
+    let sendData={'title':title,'tags':tags,'description':description}
+    let axiosConfig ={
+      headers:{
+        'Content-Type' : 'application/json'
+      }
+    };
+    axios.post('http://localhost:5000/api/AddPage/AddPageFunc',sendData,axiosConfig).then(response => console.log(response))
+    .catch(error => console.log(error));
+    
+}
  render() {
+  const { title, tags, description } = this.state;
   return (
   <div>
   <Header as='h1'>Add Page</Header>
-  <Form onSubmit={this.handleSubmit}>
-  <div class="ui form">
+  <Form  class="ui form" onSubmit={this.onSubmit}>
   <div class="field">
-    <label>Title</label>
-    <input type="text" name="Title" placeholder="Enter Title"/>
+  <label>Title <input type="text" name="title" value={title} onChange={this.onChange}/></label>
   </div>
   <div class="field">
-    <label>Tags</label>
-    <input type="text" name="Tags" placeholder="Enter Tags"/>
+  <label>Tags  <input type="text" name="tags" value={tags} onChange={this.onChange}/></label>
   </div>
-    <div class="field">
-    <label>Description</label>
-   <textarea></textarea>
-    </div>
-    <div>
-    <button type="submit" class="ui green button">Submit</button>
-    <button class="ui blue button">Like</button>
-    </div>
-    </div>
+  <div class="field">
+  <label>Description <input type="text" name="description" value={description} onChange={this.onChange}/></label>
+  </div>
+  <button type="submit" class="ui green button">Submit</button>
+  <button class="ui blue button">Like</button>
   </Form>
   </div>
 );
