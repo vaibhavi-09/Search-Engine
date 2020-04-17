@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +15,18 @@ namespace AddPageAPI.Controllers
     [Route("api/[controller]")]
     public class AddPageController : Controller
     {
-        public void Post([FromBody] AddPage Page)
+        [Route("[action]")]
+        [HttpPost("api/AddPage/AddPageFunc")]
+        public void AddPageFunc([FromBody] AddPage Page)
         {
              Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.File("Logs\\myapp.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
             
-            var title=Page.Title;
-            var tags=Page.Tags;
-            var description=Page.Description;
+            var title=Page.title;
+            var tags=Page.tags;
+            var description=Page.description;
             
            Log.Information("Title:"+title+"Tags:"+tags+"Description:"+description);
          
