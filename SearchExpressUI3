@@ -1,0 +1,615 @@
+import React, { Component, Fragment } from 'react'
+import './SearchExpress.css'
+import axios from 'axios';
+import Loader from './loader.gif';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import MappedList from './MappedList'
+import {Bootstrap} from 'react-bootstrap'
+import BodyBackgroundColor from 'react-body-backgroundcolor';
+import history from './history';
+import SearchPage from './SearchPage';
+import searchlogo from './searchlogo.png';
+import invest from './invest.png';
+import SearchResultPage from './SearchResultPage';
+import {
+    Button,
+    Container,
+    Divider,
+    Grid,
+    Header,
+    Icon,
+    Image,
+    List,
+    Menu,
+    Responsive,
+    Segment,
+    Sidebar,
+    Visibility,
+    GridColumn,
+  } from 'semantic-ui-react'
+
+class SearchExpressUI3 extends Component {
+
+    constructor(props)
+    {
+        super(props); 
+            this.state=
+            {
+                searchquery:'',
+                selected:'',
+                results:[],
+                loading:false,
+                message:'',
+                items:[],
+                counter:0
+            };
+            this.cancel=''; 
+          this.handleSubmit=this.handleSubmit.bind(this)
+     };
+
+
+     fetchSearchResults=()=>{
+        const searchUrl='http://localhost:9000/api/home';
+         if(this.cancel){  //if there is something in the current request then cancel the previous request
+             this.cancel.cancel();
+         }
+         this.cancel=axios.CancelToken.source();//if not then we will create the token and store it
+
+         axios.get(searchUrl,{cancelToken:this.cancel.token,})
+        //  .then(res=>{
+        //      console.warn(res.data)//gives us only the data saved in the database..other useless data goes away
+        .then(res=>{
+            const resultNotFoundMsg=!res.data?
+            'There is no data. Please add a page':'';
+               console.log(res.data)
+            this.setState({
+                results:res.data,
+                message:resultNotFoundMsg,
+                loading:false, 
+                              
+            })           
+        })      
+         .catch(error=>{
+             if(axios.isCancel(error)||error){
+                    this.setState({
+                        loading:false,
+                        message:'Failed to fetch the data. Please check the network'
+                    })
+             }
+            })           
+     };
+                    // handleSubmit(event){
+                    //     const {searchquery,results}=this.state
+                    //      event.preventDefault();                         
+                    //     const resp =  axios.get(`http://localhost:9000/api/home`);
+                    //     this.setState({
+                    //         results:resp.data
+                    //         });
+                           
+                    //         const items = results.filter((result)=>{
+                    //             if(!searchquery)
+                    //              return ''
+                                
+                    //             else if(result.title.toLowerCase().includes(searchquery.toLowerCase())||result.Tags.toLowerCase().includes(searchquery.toLowerCase())){
+                    //                 return result
+                    //             }
+                
+                    //         }).map(result =>{
+                    //                    return(<a key={result.title}>
+                    //                          <h1>Title:{result.title}</h1>
+                    //                      <p>Description: {result.Area}</p>
+                    //                    <p> Tags: {result.Tags}</p>
+                    //                    <p> Likes:{result.Likes}</p>
+                    //                    </a> )}
+                    //                    )   
+                    //                 this.setState({items:items}) 
+                    //              }          
+                    
+                      handleSubmit(event){
+                        const {searchquery,results}=this.state
+                         event.preventDefault();                         
+                        const resp = axios.get(`http://localhost:9000/api/home`);
+                        this.setState({
+                            results:resp.data
+                            });
+                                
+                            const items = results.filter((result)=>{
+                                  if(result.title.toLowerCase().includes(searchquery.toLowerCase())||result.Tags.toLowerCase().includes(searchquery.toLowerCase())){
+                                     return result                                                 
+                                 }    
+
+                                 else if((!(result.title.toLowerCase().includes(searchquery.toLowerCase()))||!(result.Tags.toLowerCase().includes(searchquery.toLowerCase()))) && result!=null){
+                                    this.setState({message:'Please add a page'})
+                                    
+                                }       
+                            }).map(result =>{
+                                       return(<a key={result.title}>
+                                             <h1>Title:{result.title}</h1>
+                                         <p>Description: {result.Description}</p>
+                                       <p> Tags: {result.Tags}</p>
+                                       <p> Likes:{result.Likes}</p>
+                                       </a> )}
+                                       )   
+                                    this.setState({items:items}) 
+                    }
+                              
+                      handleOnInputChange=(event)=>{
+                        const searchquery=event.target.value;
+                        if(!searchquery){
+                                this.setState({loading:false,searchquery,results:{},message:''});
+                        }
+                        else{
+                        this.setState({searchquery:searchquery, loading:true,message:''},()=>{
+                            this.fetchSearchResults(searchquery);//callbackfunction
+                        
+                        });      
+                       }
+                     
+                    };
+                    
+  hideFixedMenu = () => this.setState({ fixed: false })
+  showFixedMenu = () => this.setState({ fixed: true })   
+render()
+{      
+    const { children } = this.props
+    const {searchquery,message,loading,items,fixed}=this.state;     //  pulling state out of constructor
+    const getWidth = () => {
+        const isSSR = typeof window === 'undefined'
+      
+        return isSSR ? Responsive.onlyTablet.minWidth : window.innerWidth
+      }
+      const HomepageHeading = () => (
+        <Container text>
+         <img src = {searchlogo} align = 'right' width={50} height={50} alt="SearchLogo" mode='fit' className="rounded float-right"/>
+          <Header
+          
+            as='h1'
+            content='SEARCH EXPRESS'
+            
+            inverted
+            style={{
+              fontSize: '4em',
+              fontWeight: 'normal',
+              marginBottom: 0,
+              marginTop:'1.5em',
+            }}
+          />
+         <Header
+      as='h2'
+      content='Search your key investments here'
+      inverted
+      style={{
+        fontSize:'1.7em',
+        fontWeight: 'normal',
+        marginTop: '1.5em',
+      }}
+    />
+          </Container>
+          
+      )
+
+    return(      
+        <div>                               
+          <Responsive getWidth={getWidth} minWidth={Responsive.onlyTablet.minWidth}>
+        <Visibility
+          once={false}
+          onBottomPassed={this.showFixedMenu}
+          onBottomPassedReverse={this.hideFixedMenu}
+        >
+          <Segment
+            inverted
+            textAlign='center'
+            style={{ minHeight: 500, padding: '0.4em 0em' }}
+            vertical
+          >
+            <Menu
+              fixed={fixed ? 'top' : null}
+              inverted={!fixed}
+              pointing={!fixed}
+              secondary={!fixed}
+              size='large'
+            >
+              <Container>
+                <Menu.Item as='a' active>
+                  Home
+                </Menu.Item>
+                <Menu.Item as='a'>Work</Menu.Item>
+                <Menu.Item as='a'>Company</Menu.Item>
+                <Menu.Item as='a'>Careers</Menu.Item>
+                <Menu.Item position='right'>
+                  <Button as='a' inverted={!fixed}>
+                    Log in
+                  </Button>
+                  <Button as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
+                    Sign Up
+                  </Button>
+                </Menu.Item>
+              </Container>
+            </Menu>
+            <HomepageHeading />
+            <div className="container">
+            <input 
+                style={{width: "350px", height: "50px"}}
+                className="search-bar"
+                name="searchquery"
+                type="text"
+                
+                value={searchquery} 
+                id="search-input" 
+                placeholder="Search.."
+                onChange={this.handleOnInputChange}   
+                >              
+                </input>
+                {message && <p className="message">{message}</p>}
+                {/* <MappedList listDisplayer = {this.handleSubmit}/> */}
+                <Button  primary size='large' onClick={() => history.push('/SearchResultPage')}>Search  <Icon name='right arrow'/></Button>
+                <Button  primary size='large' onClick={() => history.push('/AddPageUI')}>Add  <Icon name='plus'/></Button>  
+                </div>              
+          </Segment>
+        </Visibility>
+        {children}
+      </Responsive>                             
+           <img src={ Loader } className={`search-loading ${ loading ? 'show' : 'hide' }`} alt="loader"/>   
+           
+           
+          
+          <React.Fragment>
+             {    
+                  items.map(result=>(                                
+                 <React.Fragment key = {result.id}>                                                                              
+                 <h6>{result}</h6>                     
+                 </React.Fragment>
+                 ))              
+            }
+            </React.Fragment>
+          <Segment inverted vertical style={{ padding: '5em 0em' }}>
+      <Container>
+        <Grid divided inverted stackable>
+          <Grid.Row>
+            <Grid.Column width={3} >
+              <Header inverted as='h4' content='About' />
+              <List link inverted>
+                <List.Item as='a'>Sitemap</List.Item>
+                <List.Item as='a'>Contact Us</List.Item>
+                <List.Item as='a'>Our Services</List.Item>
+                <List.Item as='a'>News Room</List.Item>
+              </List>
+            </Grid.Column>
+            <Grid.Column width={3}>
+              <Header inverted as='h4' content='Services' />
+              <List link inverted>
+                <List.Item as='a'>Privacy Policy </List.Item>
+                <List.Item as='a'>Terms of Use</List.Item>
+                <List.Item as='a'>Disclosure</List.Item>
+              </List>
+            </Grid.Column>
+            <Grid.Column width={7}>
+           
+              <header>
+                Get your career started at Millenium Investment Services:
+                </header>
+                <p>
+                Millenium Investment Services PVT.LTD.
+               <n>C-220 Mahendra SEZ IT Park, Jaipur Rajasthan,</n>
+                <n> India 302020 </n>  
+              </p>
+              </Grid.Column>
+             <GridColumn width={3}> <img src = {invest} align = 'right' width={100} height={100} alt="Globe" mode='fit' style={{right:0}} float="right"/>
+             </GridColumn>
+            </Grid.Row>
+            </Grid>
+            </Container>
+            </Segment> 
+            </div> 
+    )
+   
+}
+}
+  export default SearchExpressUI3import React, { Component, Fragment } from 'react'
+import './SearchExpress.css'
+import axios from 'axios';
+import Loader from './loader.gif';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import MappedList from './MappedList'
+import {Bootstrap} from 'react-bootstrap'
+import BodyBackgroundColor from 'react-body-backgroundcolor';
+import history from './history';
+import SearchPage from './SearchPage';
+import searchlogo from './searchlogo.png';
+import invest from './invest.png';
+import SearchResultPage from './SearchResultPage';
+import {
+    Button,
+    Container,
+    Divider,
+    Grid,
+    Header,
+    Icon,
+    Image,
+    List,
+    Menu,
+    Responsive,
+    Segment,
+    Sidebar,
+    Visibility,
+    GridColumn,
+  } from 'semantic-ui-react'
+
+class SearchExpressUI3 extends Component {
+
+    constructor(props)
+    {
+        super(props); 
+            this.state=
+            {
+                searchquery:'',
+                selected:'',
+                results:[],
+                loading:false,
+                message:'',
+                items:[],
+                counter:0
+            };
+            this.cancel=''; 
+          this.handleSubmit=this.handleSubmit.bind(this)
+     };
+
+
+     fetchSearchResults=()=>{
+        const searchUrl='http://localhost:9000/api/home';
+         if(this.cancel){  //if there is something in the current request then cancel the previous request
+             this.cancel.cancel();
+         }
+         this.cancel=axios.CancelToken.source();//if not then we will create the token and store it
+
+         axios.get(searchUrl,{cancelToken:this.cancel.token,})
+        //  .then(res=>{
+        //      console.warn(res.data)//gives us only the data saved in the database..other useless data goes away
+        .then(res=>{
+            const resultNotFoundMsg=!res.data?
+            'There is no data. Please add a page':'';
+               console.log(res.data)
+            this.setState({
+                results:res.data,
+                message:resultNotFoundMsg,
+                loading:false, 
+                              
+            })           
+        })      
+         .catch(error=>{
+             if(axios.isCancel(error)||error){
+                    this.setState({
+                        loading:false,
+                        message:'Failed to fetch the data. Please check the network'
+                    })
+             }
+            })           
+     };
+                    // handleSubmit(event){
+                    //     const {searchquery,results}=this.state
+                    //      event.preventDefault();                         
+                    //     const resp =  axios.get(`http://localhost:9000/api/home`);
+                    //     this.setState({
+                    //         results:resp.data
+                    //         });
+                           
+                    //         const items = results.filter((result)=>{
+                    //             if(!searchquery)
+                    //              return ''
+                                
+                    //             else if(result.title.toLowerCase().includes(searchquery.toLowerCase())||result.Tags.toLowerCase().includes(searchquery.toLowerCase())){
+                    //                 return result
+                    //             }
+                
+                    //         }).map(result =>{
+                    //                    return(<a key={result.title}>
+                    //                          <h1>Title:{result.title}</h1>
+                    //                      <p>Description: {result.Area}</p>
+                    //                    <p> Tags: {result.Tags}</p>
+                    //                    <p> Likes:{result.Likes}</p>
+                    //                    </a> )}
+                    //                    )   
+                    //                 this.setState({items:items}) 
+                    //              }          
+                    
+                      handleSubmit(event){
+                        const {searchquery,results}=this.state
+                         event.preventDefault();                         
+                        const resp = axios.get(`http://localhost:9000/api/home`);
+                        this.setState({
+                            results:resp.data
+                            });
+                                
+                            const items = results.filter((result)=>{
+                                  if(result.title.toLowerCase().includes(searchquery.toLowerCase())||result.Tags.toLowerCase().includes(searchquery.toLowerCase())){
+                                     return result                                                 
+                                 }    
+
+                                 else if((!(result.title.toLowerCase().includes(searchquery.toLowerCase()))||!(result.Tags.toLowerCase().includes(searchquery.toLowerCase()))) && result!=null){
+                                    this.setState({message:'Please add a page'})
+                                    
+                                }       
+                            }).map(result =>{
+                                       return(<a key={result.title}>
+                                             <h1>Title:{result.title}</h1>
+                                         <p>Description: {result.Description}</p>
+                                       <p> Tags: {result.Tags}</p>
+                                       <p> Likes:{result.Likes}</p>
+                                       </a> )}
+                                       )   
+                                    this.setState({items:items}) 
+                    }
+                              
+                      handleOnInputChange=(event)=>{
+                        const searchquery=event.target.value;
+                        if(!searchquery){
+                                this.setState({loading:false,searchquery,results:{},message:''});
+                        }
+                        else{
+                        this.setState({searchquery:searchquery, loading:true,message:''},()=>{
+                            this.fetchSearchResults(searchquery);//callbackfunction
+                        
+                        });      
+                       }
+                     
+                    };
+                    
+  hideFixedMenu = () => this.setState({ fixed: false })
+  showFixedMenu = () => this.setState({ fixed: true })   
+render()
+{      
+    const { children } = this.props
+    const {searchquery,message,loading,items,fixed}=this.state;     //  pulling state out of constructor
+    const getWidth = () => {
+        const isSSR = typeof window === 'undefined'
+      
+        return isSSR ? Responsive.onlyTablet.minWidth : window.innerWidth
+      }
+      const HomepageHeading = () => (
+        <Container text>
+         <img src = {searchlogo} align = 'right' width={50} height={50} alt="SearchLogo" mode='fit' className="rounded float-right"/>
+          <Header
+          
+            as='h1'
+            content='SEARCH EXPRESS'
+            
+            inverted
+            style={{
+              fontSize: '4em',
+              fontWeight: 'normal',
+              marginBottom: 0,
+              marginTop:'1.5em',
+            }}
+          />
+         <Header
+      as='h2'
+      content='Search your key investments here'
+      inverted
+      style={{
+        fontSize:'1.7em',
+        fontWeight: 'normal',
+        marginTop: '1.5em',
+      }}
+    />
+          </Container>
+          
+      )
+
+    return(      
+        <div>                               
+          <Responsive getWidth={getWidth} minWidth={Responsive.onlyTablet.minWidth}>
+        <Visibility
+          once={false}
+          onBottomPassed={this.showFixedMenu}
+          onBottomPassedReverse={this.hideFixedMenu}
+        >
+          <Segment
+            inverted
+            textAlign='center'
+            style={{ minHeight: 500, padding: '0.4em 0em' }}
+            vertical
+          >
+            <Menu
+              fixed={fixed ? 'top' : null}
+              inverted={!fixed}
+              pointing={!fixed}
+              secondary={!fixed}
+              size='large'
+            >
+              <Container>
+                <Menu.Item as='a' active>
+                  Home
+                </Menu.Item>
+                <Menu.Item as='a'>Work</Menu.Item>
+                <Menu.Item as='a'>Company</Menu.Item>
+                <Menu.Item as='a'>Careers</Menu.Item>
+                <Menu.Item position='right'>
+                  <Button as='a' inverted={!fixed}>
+                    Log in
+                  </Button>
+                  <Button as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
+                    Sign Up
+                  </Button>
+                </Menu.Item>
+              </Container>
+            </Menu>
+            <HomepageHeading />
+            <div className="container">
+            <input 
+                style={{width: "350px", height: "50px"}}
+                className="search-bar"
+                name="searchquery"
+                type="text"
+                
+                value={searchquery} 
+                id="search-input" 
+                placeholder="Search.."
+                onChange={this.handleOnInputChange}   
+                >              
+                </input>
+                {message && <p className="message">{message}</p>}
+                {/* <MappedList listDisplayer = {this.handleSubmit}/> */}
+                <Button  primary size='large' onClick={() => history.push('/SearchResultPage')}>Search  <Icon name='right arrow'/></Button>
+                <Button  primary size='large' onClick={() => history.push('/AddPageUI')}>Add  <Icon name='plus'/></Button>  
+                </div>              
+          </Segment>
+        </Visibility>
+        {children}
+      </Responsive>                             
+           <img src={ Loader } className={`search-loading ${ loading ? 'show' : 'hide' }`} alt="loader"/>   
+           
+           
+          
+          <React.Fragment>
+             {    
+                  items.map(result=>(                                
+                 <React.Fragment key = {result.id}>                                                                              
+                 <h6>{result}</h6>                     
+                 </React.Fragment>
+                 ))              
+            }
+            </React.Fragment>
+          <Segment inverted vertical style={{ padding: '5em 0em' }}>
+      <Container>
+        <Grid divided inverted stackable>
+          <Grid.Row>
+            <Grid.Column width={3} >
+              <Header inverted as='h4' content='About' />
+              <List link inverted>
+                <List.Item as='a'>Sitemap</List.Item>
+                <List.Item as='a'>Contact Us</List.Item>
+                <List.Item as='a'>Our Services</List.Item>
+                <List.Item as='a'>News Room</List.Item>
+              </List>
+            </Grid.Column>
+            <Grid.Column width={3}>
+              <Header inverted as='h4' content='Services' />
+              <List link inverted>
+                <List.Item as='a'>Privacy Policy </List.Item>
+                <List.Item as='a'>Terms of Use</List.Item>
+                <List.Item as='a'>Disclosure</List.Item>
+              </List>
+            </Grid.Column>
+            <Grid.Column width={7}>
+           
+              <header>
+                Get your career started at Millenium Investment Services:
+                </header>
+                <p>
+                Millenium Investment Services PVT.LTD.
+               <n>C-220 Mahendra SEZ IT Park, Jaipur Rajasthan,</n>
+                <n> India 302020 </n>  
+              </p>
+              </Grid.Column>
+             <GridColumn width={3}> <img src = {invest} align = 'right' width={100} height={100} alt="Globe" mode='fit' style={{right:0}} float="right"/>
+             </GridColumn>
+            </Grid.Row>
+            </Grid>
+            </Container>
+            </Segment> 
+            </div> 
+    )
+   
+}
+}
+  export default SearchExpressUI3
