@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Form,Header ,Segment,Grid,Label,List,Button,Menu,Container,Visibility} from 'semantic-ui-react';
+import { Form,Header ,Segment,Grid,Label,List,Button,Menu} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
 class MyForm extends React.Component {
@@ -34,49 +34,17 @@ class MyForm extends React.Component {
 
   
   }
-  hideFixedMenu = () => this.setState({ fixed: false })
-  showFixedMenu = () => this.setState({ fixed: true })   
  render() {
-  const { title, tags, description ,fixed} = this.state;
+  const { title, tags, description } = this.state;
   return (
   <div>
-     <Visibility
-          once={false}
-          onBottomPassed={this.showFixedMenu}
-          onBottomPassedReverse={this.hideFixedMenu}
-        >
-          <Segment
-            inverted
-            textAlign='left'
-            style={{ minHeight: 500, padding: '0.4em 0em' }}
-            vertical
-          >
-     <Menu
-              fixed={fixed ? 'top' : null}
-              inverted={!fixed}
-              pointing={!fixed}
-              secondary={!fixed}
-              size='large'
-            >
-              <Container>
-                <Menu.Item as='a' active>
-                  Home
-                </Menu.Item>
-                <Menu.Item as='a'>Work</Menu.Item>
-                <Menu.Item as='a'>Company</Menu.Item>
-                <Menu.Item as='a'>Careers</Menu.Item>
-                <Menu.Item position='right'>
-                  <Button as='a' inverted={!fixed}>
-                    Log in
-                  </Button>
-                  <Button as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
-                    Sign Up
-                  </Button>
-                </Menu.Item>
-              </Container>
-            </Menu>
-    <Segment compact inverted color='green'>Add Page</Segment>
-     
+    <Menu inverted color='blue'>
+    <Menu.Item name='Home'/>
+    <Menu.Item name='Results'/>
+    </Menu>
+    
+    <Segment inverted color='violet'>Add Page</Segment>
+   
   <Form  class="ui form" onSubmit={this.onSubmit}>
   <div class="field">
   <Label>Title <input type="text" name="title" value={title} onChange={this.onChange}/></Label>
@@ -90,7 +58,8 @@ class MyForm extends React.Component {
   </div>
   <Button color='green' type="submit"  >Submit</Button>
   </Form>
-  <Segment inverted color='black'>
+  
+  <Segment inverted color='blue'>
   <Grid divided inverted stackable>
           <Grid.Row>
             <Grid.Column width={3} >
@@ -127,8 +96,6 @@ class MyForm extends React.Component {
   </Grid.Row>
   </Grid>
   </Segment>
-  </Segment>
-  </Visibility>
 
   
   </div>
