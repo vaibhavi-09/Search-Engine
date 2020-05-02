@@ -1,0 +1,181 @@
+import React from 'react';
+import axios from 'axios';
+import { Form,Header ,Segment,Grid,Label,List,Button,Menu} from 'semantic-ui-react';
+import {Modal,Row, Col} from 'react-bootstrap';
+import 'semantic-ui-css/semantic.min.css';
+import invest from './invest.png';
+import './Components/SearchExpressUI3.css'
+
+class AddPageUI extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+
+      Title: '',
+      Tags: '',
+      Description: '',
+    };
+    //  this.onSubmit=this.onSubmit.bind(this);
+  }
+
+  onChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+//   onSubmit(e) {
+//   e.preventDefault();
+//   // get our form data out of state
+//   const { Title, Tags, Description } = this.state;
+//   let sendData={'Title':Title,'Tags':Tags,'Description':Description};
+//   let axiosConfig ={
+//   headers:{
+//  'Content-Type' : 'application/json'
+//       }
+//    };
+//   axios.post('http://localhost:44379/api/SearchExpressUI',sendData,axiosConfig)
+//   .then(response => alert(response))
+//   .catch(error => console.log(error)); 
+
+//   }
+OnSubmit(event){
+  event.preventDefault();
+ fetch('https://localhost:44379/api/SearchExpress/AddData',{
+method:'POST',
+headers:{
+  'Accept':'application/json',
+  'Content-Type':'application/json'
+},
+body:JSON.stringify({
+  id:null,
+  Title:event.target.Title.value,
+  Tags:event.target.Tags.value,
+  Description:event.target.Description.value
+})
+})
+.then(res=> res.json())
+.then((result)=>
+{
+alert(result); 
+},
+(error)=>{
+alert('Failed!');
+}
+)
+}
+  
+  // .then(response => console.log(response))
+  // .catch(error => console.log(error)); 
+//   onSubmit(event){
+//     event.preventDefault();
+//    fetch('https://localhost:44379/api/SearchExpress/AddData',{
+//   method:'POST',
+//   headers:{
+//     'Accept':'application/json',
+//     'Content-Type':'application/json'
+//   }
+// })
+// .then(res=> res.json())
+// .then(result => {
+//   this.setState({ id:null,
+//                   Title: result.Title,
+//                   Description: result.Description,
+//                   Tags: result.Tags })
+//   })
+//   .then((result)=>
+// {
+//   alert(result);
+// }),
+// (error)=>{
+// alert('Failed!')
+// }
+// }
+// handleSubmitPage(event){
+//     const requestOptions = {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify({ title: 'React POST Request Example' })
+//     };
+//     fetch('https://localhost:44379/api/SearchExpress/AddData', requestOptions)
+//         .then(response => response.json())
+//         .then(data => this.setState({ Title: data.Title,
+//             Description: data.Description,
+//             Tags: data.Tags
+//           }))
+// .then((result)=>
+// {
+//   alert(result);
+// }),
+// (error)=>{
+// alert('Failed!')
+// }
+// }
+ render() {
+  const { Title, Tags, Description } = this.state;
+  return (
+  <div>
+
+
+
+  <Form  className="ui form" onSubmit={this.onSubmit}>
+  <div className="field">
+  <Label>Title <input style={{width: "1000px", height: "50px"}} type="text" name="Title" value={Title} onChange={this.onChange}/></Label>
+  </div>
+  <div className="field">
+  <Label>Tags  <input  style={{width: "1000px", height: "50px"}} type="text" name="Tags" value={Tags} onChange={this.onChange}/></Label>
+  </div>
+  <div className="field">
+  <Label>Description </Label>
+  <textarea  style={{width: "1000px", height: "50px"}} name="Description" value={Description} onChange={this.onChange} ></textarea>
+  </div>
+  <Button color='green' type="submit">Submit</Button>
+  </Form>
+
+                      
+                       
+                        
+                       
+  <Segment inverted color='blue'>
+  <Grid divided inverted stackable>
+          <Grid.Row>
+            <Grid.Column width={3} >
+            <Header inverted as='h4' content='About' />
+<List link inverted>
+    <List.Item icon='users' content='NAV Backoffice'  />
+    <List.Item icon='marker' content='Sitapura,Jaipur' />
+    <List.Item
+      icon='mail'
+      content={<a href='mailto:hr@navbackoffice.com'>hr@navbackoffice.com</a>}
+    />
+    <List.Item
+      icon='linkify'
+      content={<a href='www.navbackoffice.com'>www.navbackoffice.com</a>}
+    />
+  </List>
+  </Grid.Column>
+
+  <Grid.Column width={3}>
+  <Header inverted as='h4' content='Services' />
+  <List link inverted>
+  <List.Item as='a'>Hedge Funds </List.Item>
+  <List.Item as='a'>Private Equity</List.Item>
+  <List.Item as='a'>Commodity Pools</List.Item>
+  <List.Item as='a'>Multi Advisor Platforms</List.Item>
+  </List>
+  </Grid.Column>
+  <Grid.Column width={7}>
+  <Header inverted as='h4' content='NAV Search Engine'/> 
+  <p>Search Information related to NAV IT Documents ,Links,
+  Functionalities etc.
+  </p>
+  </Grid.Column>
+  <Grid.Column width={3} height={1}> <img src = {invest}  width={100} height={100} alt="Globe" mode='fit' style={{right:0}} float="right"/>
+     </Grid.Column>
+  </Grid.Row>
+  </Grid>
+  </Segment>
+  </div>
+);
+}
+}
+
+export default AddPageUI
