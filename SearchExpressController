@@ -1,0 +1,99 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using SearchExpressDataConnectivity.Models;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+
+namespace SearchExpressDataConnectivity.Controllers
+{
+
+    public class SearchExpressController : ApiController
+    {
+        [HttpGet]
+        [ActionName("DefaultAction")]
+        public HttpResponseMessage Get() {
+            DataTable table = new DataTable();
+
+            string query = @"
+                        SELECT Title, Description, Tags, Likes FROM dbo.SearchExpress_Data
+                        ";
+            using (var con = new SqlConnection(ConfigurationManager.ConnectionStrings["SearchExpress_Data"].ConnectionString))
+            using (var cmd = new SqlCommand(query, con))
+            using (var da = new SqlDataAdapter(cmd))
+            {
+                cmd.CommandType = CommandType.Text;
+                da.Fill(table);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, table);
+        }
+        [HttpPost]
+        //[ActionName("AddData")]
+
+        [Route("api/SearchExpress/AddData")]
+        public string AddData(SearchData sd)
+        {
+            try
+            {
+                DataTable table = new DataTable();
+
+                string query = @"                      
+                        INSERT INTO dbo.SearchExpress_Data (Title,Tags,Description)
+                        VALUES(
+                               '" + sd.Title + @"'
+                               ,'" + sd.Tags + @"'
+                               ,'" + sd.Description + @"'                   
+                        )
+                         ";
+
+                using (var con = new SqlConnection(ConfigurationManager.ConnectionStrings["SearchExpress_Data"].ConnectionString))
+                using (var cmd = new SqlCommand(query, con))
+                using (var da = new SqlDataAdapter(cmd))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    da.Fill(table);
+                }
+                //  return Request.CreateResponse(HttpStatusCode.OK, table);
+                return "Data Added";
+            }
+            catch (System.Exception)
+            {
+                return "Failed to Add";
+            }
+        }
+
+        [HttpPut]
+        [Route("api/SearchExpress/AddLikes")]
+        public string AddLikes(SearchData sd)
+        {
+            try
+            {
+                DataTable table = new DataTable();
+
+                string query = @"                      
+                        UPDATE dbo.SearchExpress_Data
+                       SET Likes = " + sd.Likes + @"
+                      WHERE Title ='" + sd.Title + @"'
+                         ";
+
+                using (var con = new SqlConnection(ConfigurationManager.ConnectionStrings["SearchExpress_Data"].ConnectionString))
+                using (var cmd = new SqlCommand(query, con))
+                using (var da = new SqlDataAdapter(cmd))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    da.Fill(table);
+                }
+
+                return "Data Added";
+            }
+            catch (System.Exception)
+            {
+                return "Failed to Add";
+            }
+
+        }
+    }
+}
