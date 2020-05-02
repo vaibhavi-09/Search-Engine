@@ -1,0 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
+
+namespace SearchExpressDataConnectivity.Models
+{
+    public class SearchData
+    {
+        [Key]
+        public int id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Tags { get; set; }
+        public int Likes { get; set; }
+    }
+}
