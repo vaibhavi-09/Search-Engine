@@ -1,10 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import { Form,Header ,Segment,Grid,Label,List,Button,Menu,Divider} from 'semantic-ui-react';
+import { Form,Header ,Segment,Grid,List,Button,Menu} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import TagsInput from 'react-tagsinput';
 import './index.css';
-import { SketchPicker } from 'react-color';
 import 'react-tagsinput/react-tagsinput.css'
 
 
@@ -44,7 +43,7 @@ class MyForm extends React.Component {
   
   }
  render() {
-  const {title, tags, description } = this.state;
+  //const {title, tags, description } = this.state;
   return (
   <div>
     <Menu inverted color='blue'>
@@ -58,24 +57,24 @@ class MyForm extends React.Component {
    <div class="ten wide column">
   <Form  class="ui form" onSubmit={this.onSubmit}>
   <div class="field">
-  <Label>Title <input type="text" name="title" value={this.state.title} onChange={this.onChange}/></Label>
+  <label>Title <input type="text" name="title" value={this.state.title} onChange={this.onChange}/></label>
   </div>
   <div class="field">
-  <Label>Description </Label>
+  <label>Description </label>
   <textarea name="description" value={this.state.description} onChange={this.onChange} ></textarea>
   </div>
-  <Button color='green' type="submit"  >Submit</Button>
+  <Button color='green' type="submit"  >Add Page</Button>
   </Form>
   </div>
   <div class="six wide column">
-      <Label>Tags<TagsInput addKeys={[9, 13, 32, 188]} name="tags"  value={this.state.tags} onChange={this.handleChange.bind(this)}/></Label>
+      <label>Tags<TagsInput addKeys={[9, 13, 32, 188]} name="tags"  value={this.state.tags} onChange={this.handleChange.bind(this)}/></label>
       </div>
   </div>
   </Segment>
   
-  <Segment inverted color='blue'>
-  <Grid divided inverted stackable>
-          <Grid.Row>
+
+  <Grid divided inverted stackable style={{height: '30vh'}}>
+          <Grid.Row color='blue'>
             <Grid.Column width={3} >
             <Header inverted as='h4' content='About' />
 <List link inverted>
@@ -102,14 +101,14 @@ class MyForm extends React.Component {
   </List>
   </Grid.Column>
   <Grid.Column width={7}>
-  <Header inverted as='h4' content='NAV Search Engine'/> 
+  <Header inverted as='h4' content='Search Express'/> 
   <p>Search Information related to NAV IT Documents ,Links,
   <n>Functionalities etc.</n>
   </p>
   </Grid.Column>
   </Grid.Row>
   </Grid>
-  </Segment>
+ 
 
   
   </div>
