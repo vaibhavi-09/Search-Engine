@@ -14,8 +14,12 @@ class MyForm extends React.Component {
       title: '',
       tags: [],
      description: '',
+     links: []
     };
     
+  }
+  handleLinksChange(links) {
+    this.setState({links})
   }
 
   handleChange(tags) {
@@ -68,7 +72,8 @@ class MyForm extends React.Component {
   </div>
   <div class="six wide column">
       <label>Tags<TagsInput addKeys={[9, 13, 32, 188]} name="tags"  value={this.state.tags} onChange={this.handleChange.bind(this)}/></label>
-      </div>
+      <label>Links<TagsInput addKeys={[9, 13, 32, 188]} name="links"  value={this.state.links} onChange={this.handleLinksChange.bind(this)}/></label>
+  </div>
   </div>
   </Segment>
   
